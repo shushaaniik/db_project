@@ -21,7 +21,7 @@ def initialize_db(db_name, owner_username, owner_password="secret"):
 
         connection.close()
         connection = psycopg2.connect(
-            dbname=db_name,
+            dbname="postgres_db",
             user=owner_username,
             password=owner_password,
             host="localhost",
