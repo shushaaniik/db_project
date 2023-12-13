@@ -2,8 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core import SessionLocal, ConnectionOperator, Subscriber, Connection
 from pydantic import BaseModel
-
-app = FastAPI()
+from main import app
 
 
 # Dependency to get the database session
@@ -111,7 +110,7 @@ def delete_subscriber(passport_data: str, db: Session = Depends(get_db)):
 
 # CRUD operations for Connections
 @app.post("/connections/", response_model=Connection)
-def create_connection(connection: ConnectionCreate, db: Session = Depends(get_db)):
+def create_connection(connection: Connection, db: Session = Depends(get_db)):
     db_connection = Connection(**connection.dict())
     db.add(db_connection)
     db.commit()
