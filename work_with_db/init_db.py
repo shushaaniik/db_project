@@ -5,7 +5,7 @@ from psycopg2 import sql
 def initialize_db(db_name, owner_username, owner_password="secret"):
     # Connect to the default database to create a new DB
     connection = psycopg2.connect(
-        dbname="postgres",
+        dbname="postgres_db",
         user="admin",
         password="secret",
         host="localhost",
