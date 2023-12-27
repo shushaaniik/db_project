@@ -1,17 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from core import SessionLocal, ConnectionOperator, Subscriber, Connection
-from pydantic import BaseModel
+from tables import ConnectionOperator, Subscriber, Connection
+from database_setup import get_db
 from main import app
-
-
-# Dependency to get the database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # CRUD operations for Connection Operators
