@@ -5,12 +5,16 @@ from src.schemas import SubscriberSchema, SubscriberCreateSchema
 from src.tables import Subscriber
 from src.database_setup import get_db
 
+from . import CHUNK_SIZE
+
 
 router = APIRouter()
 
 
 @router.get("/", response_model=list[SubscriberSchema])
-def read(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read(p: int = 0, db: Session = Depends(get_db)):
+    skip = p * CHUNK_SIZE
+    limit = CHUNK_SIZE
     return db.query(Subscriber).order_by(Subscriber.sub_id).offset(skip).limit(limit).all()
 
 
