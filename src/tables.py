@@ -41,7 +41,6 @@ class Subscriber(Base):
     passport_data = Column(String, index=True)
     name = Column(String)
     surname = Column(String)
-    sursurname = Column(String)
     address = Column(String)
 
     connections = relationship(Connection, back_populates="subscriber")

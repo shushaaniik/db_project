@@ -19,8 +19,7 @@ def select(p: int = 0, key: str = "code", db: Session = Depends(get_db)):
     query = (
         db.query(ConnectionOperator)
         .where(ConnectionOperator.name == "Mcdonald PLC")
-        .where(ConnectionOperator.number_count > 50 or 
-               ConnectionOperator.number_count < 20) 
+        .where(ConnectionOperator.number_count > 50) 
     )
     match key:
         case "code":
@@ -31,7 +30,7 @@ def select(p: int = 0, key: str = "code", db: Session = Depends(get_db)):
             query = query.order_by(ConnectionOperator.number_count)
     return query.offset(skip).limit(limit).all()
 
-@router.get("/join", response_model=list[tuple[int, int]])
+@router.get("/join", response_model=list[tuple[ConnectionOperatorSchema, SubscriberSchema]])
 def join(p: int = 0, key: str = "code", db: Session = Depends(get_db)):
     skip = p * CHUNK_SIZE
     limit = CHUNK_SIZE
@@ -44,12 +43,12 @@ def join(p: int = 0, key: str = "code", db: Session = Depends(get_db)):
         case "sub_id":
             query = query.order_by(Subscriber.id)
         case "code":
-            query = query.order_by(ConnectionOperator.id)
+            query = query.order_by(ConnectionOperator.code)
     query = query.offset(skip).limit(limit).all()
     return [(op, sub) for _, op, sub in query]
 
 
-@router.get("/join", response_model=list[dict[str, int]])
+@router.get("/group_by", response_model=list[dict[str, float]])
 def group_by(p: int = 0, db: Session = Depends(get_db)):
     skip = p * CHUNK_SIZE
     limit = CHUNK_SIZE
@@ -64,5 +63,6 @@ def group_by(p: int = 0, db: Session = Depends(get_db)):
 
 @router.put("/update")
 def update(db: Session = Depends(get_db)):
-    db.query(Connection).filter(Connection.price < 1000).update({"connection": Connection.price * 2})
+    db.query(Connection).filter(Connection.price < 1000).update({"price": Connection.price * 2})
+    db.commit()
     return db
